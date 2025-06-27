@@ -9,9 +9,8 @@
 This web application acts as a personal AI-powered coach, providing real-time feedback to help users improve their public speaking, presentation, and communication skills. It actively listens, transcribes, and analyzes speech patterns to offer instant, constructive advice.
 
 ![Application Screenshot](/ak.png)
-_**Note:** You can replace the image link above with a personal screenshot of your application running!_
 
----
+
 
 ## 🚀 Key Features
 
@@ -116,6 +115,6 @@ This project is open-source and distributed under the MIT License. See the `LICE
 
 ## 👤 Contact
 
-Asad Pathan - [GitHub @your-username](https://github.com/your-username)
+Asad Pathan - [GitHub @Asadp3406](https://github.com/your-username)
 
 _Project Link: [https://github.com/your-username/public-speaking-coach](https://github.com/your-username/public-speaking-coach)_

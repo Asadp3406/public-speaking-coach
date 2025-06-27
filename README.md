@@ -111,10 +111,4 @@ Make sure you have the following installed:
 
 This project is open-source and distributed under the MIT License. See the `LICENSE` file for more information.
 
----
 
-## 👤 Contact
-
-Asad Pathan - [GitHub @Asadp3406](https://github.com/your-username)
-
-_Project Link: [https://github.com/your-username/public-speaking-coach](https://github.com/your-username/public-speaking-coach)_

@@ -7,7 +7,8 @@ const axios = require('axios');
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
-const port = 5000;
+// The NEW, correct line:
+const port = process.env.PORT || 5000;
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;

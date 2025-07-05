@@ -1,20 +1,34 @@
 # AI Presentation & Public Speaking Coach
 
-![AI Coach UI](/ak.png)
+<p align="center">
+  <a href="https://public-speaking-coach.vercel.app/" target="_blank">
+    <img src="https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge&logo=vercel" alt="Live Demo">
+  </a>
+</p>
 
-A real-time, AI-powered web application designed to help users improve their public speaking and presentation skills. It provides live feedback on speech patterns, clarity, and confidence by leveraging advanced speech-to-text and language model APIs.
+This web application acts as a personal AI-powered coach, providing real-time feedback to help users improve their public speaking, presentation, and communication skills. It actively listens, transcribes, and analyzes speech patterns to offer instant, constructive advice.
 
----
+![Application Screenshot](/ak.png)
+
+
 
 ## 🚀 Key Features
 
-- **Real-time Transcription:** Captures and transcribes your speech as you talk.
-- **Live AI Analysis:** Streams the transcript to a Large Language Model (like Google's Gemini) for instant analysis.
-- **Constructive Feedback:** Provides feedback on key public speaking metrics:
-  - **Filler Words:** Identifies crutch words like "um," "ah," "like," etc.
-  - **Pacing & Flow:** Comments on the perceived speed and flow of the speech.
-  - **Clarity & Confidence:** Analyzes sentence structure and word choice.
-- **Modern UI:** A clean, responsive, and user-friendly interface built with React and Bootstrap.
+- **Real-time Transcription:** Utilizes the browser's Web Speech API to capture and display spoken words as they are said.
+- **Live AI Analysis:** Securely streams the transcript to a backend server, which queries the Google Gemini API for in-depth analysis.
+- **Constructive Feedback:** Delivers actionable advice on key public speaking metrics:
+  - **Filler Word Detection:** Identifies and counts crutch words like "um," "ah," "like," and "so."
+  - **Pacing and Flow:** Comments on the perceived speaking speed and rhythm.
+  - **Clarity and Confidence:** Analyzes sentence structure and word choice to gauge effectiveness.
+- **Modern & Responsive UI:** A clean, intuitive, and mobile-friendly interface built with React and Bootstrap.
+
+---
+
+## ⚙️ How It Works
+
+The application follows a real-time, full-stack architecture to provide instantaneous feedback.
+
+`[User Speaks]` → `[Browser Speech API]` → `[React Frontend]` → `[WebSocket]` → `[Node.js Backend]` → `[Gemini API]` → `[AI Feedback]` → `[WebSocket]` → `[React Frontend]` → `[User Sees Feedback]`
 
 ---
 
@@ -24,36 +38,38 @@ A real-time, AI-powered web application designed to help users improve their pub
   - [React](https://reactjs.org/)
   - [Bootstrap](https://getbootstrap.com/)
   - [Axios](https://axios-http.com/)
-  - Web Speech API (for browser-based speech recognition)
 - **Backend:**
   - [Node.js](https://nodejs.org/)
   - [Express](https://expressjs.com/)
   - [WebSockets (ws)](https://github.com/websockets/ws)
 - **AI:**
   - [Google Gemini API](https://ai.google.dev/)
+- **Deployment:**
+  - Frontend hosted on [Vercel](https://vercel.com/)
+  - Backend hosted on [Render](https://render.com/)
 
 ---
 
 ## 🔧 Getting Started: Local Setup
 
-Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
+Follow these instructions to get a copy of the project up and running on your local machine.
 
 ### Prerequisites
 
 Make sure you have the following installed:
-- [Node.js](https://nodejs.org/) (which includes npm)
+- [Node.js](https://nodejs.org/) (v18 or higher)
 - [Git](https://git-scm.com/)
 
-### Installation
+### Installation Guide
 
-1.  **Clone the repository:**
+1.  **Clone the Repository:**
     ```bash
     git clone [https://github.com/your-username/public-speaking-coach.git](https://github.com/your-username/public-speaking-coach.git)
     cd public-speaking-coach
     ```
 
 2.  **Install Backend Dependencies:**
-    (In the root `public-speaking-coach` directory)
+    (From the root `public-speaking-coach` directory)
     ```bash
     npm install
     ```
@@ -64,27 +80,35 @@ Make sure you have the following installed:
     npm install
     ```
 
-4.  **Set up Environment Variables:**
-    - Go back to the root directory.
-    - Create a `.env` file by copying the example: `cp .env.example .env` (or create it manually).
+4.  **Set Up Environment Variables:**
+    - Go back to the root project directory (`cd ..`).
+    - Create a file named `.env` in the root.
     - Open the `.env` file and add your Google Gemini API key:
       ```
       GEMINI_API_KEY="YOUR_API_KEY_HERE"
       ```
 
 5.  **Run the Application:**
-    - **Run the Backend Server:** (In the root directory)
+    You will need two separate terminals open to run both the backend and frontend servers.
+
+    - **Terminal 1: Run the Backend Server**
+      (From the root `public-speaking-coach` directory)
       ```bash
       node server.js
       ```
-    - **Run the Frontend App:** (In the `frontend` directory, in a separate terminal)
+      _Your backend will be running at `http://localhost:5000`._
+
+    - **Terminal 2: Run the Frontend App**
+      (From the `frontend` directory)
       ```bash
       npm start
       ```
-    Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+      _Your React application will open automatically at `http://localhost:3000`._
 
 ---
 
 ## 📜 License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+This project is open-source and distributed under the MIT License. See the `LICENSE` file for more information.
+
+

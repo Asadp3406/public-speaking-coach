@@ -1,13 +1,24 @@
+:root {
+  --primary-color: #8b5cf6; /* A vibrant violet */
+  --background-color: #111827; /* Very dark blue/gray */
+  --card-background: rgba(31, 41, 55, 0.5); /* Translucent dark gray */
+  --text-color: #e5e7eb;
+  --subtle-text-color: #9ca3af;
+  --glow-color: rgba(139, 92, 246, 0.4);
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  /* This sets up the background image with a dark overlay */
+  background-color: var(--background-color);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: var(--text-color);
 }

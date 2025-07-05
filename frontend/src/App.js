@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
+import { FiMic, FiStopCircle, FiLoader, FiMessageSquare, FiFileText, FiPlay, FiCpu } from 'react-icons/fi';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 let recognition;
@@ -11,17 +12,19 @@ if (SpeechRecognition) {
 }
 
 function App() {
+  const [appState, setAppState] = useState('welcome'); // 'welcome' or 'coaching'
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
-  const [feedback, setFeedback] = useState('');
-  const [status, setStatus] = useState('Click "Start Session" to begin your practice.');
+  const [feedback, setFeedback] = useState([]);
+  const [status, setStatus] = useState('Click the microphone to start your session.');
   const [isLoadingFeedback, setIsLoadingFeedback] = useState(false);
   
   const socket = useRef(null);
+  const feedbackEndRef = useRef(null);
 
   useEffect(() => {
     if (!recognition) {
-      setStatus('Speech Recognition is not supported by this browser. Please use Google Chrome.');
+      setStatus('Speech Recognition is not supported. Please use Google Chrome for the best experience.');
       return;
     }
 
@@ -37,10 +40,18 @@ function App() {
     recognition.onend = () => {
       if (isListening) {
         setIsListening(false);
-        setStatus('Session stopped. Click Start to begin again.');
+        setStatus('Session ended. Click the microphone to start again.');
       }
     };
   }, [isListening]);
+
+  useEffect(() => {
+    feedbackEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [feedback]);
+
+  const startCoaching = () => {
+    setAppState('coaching');
+  };
 
   const toggleListen = () => {
     if (isListening) {
@@ -48,9 +59,12 @@ function App() {
       if(socket.current) socket.current.close();
     } else {
       setTranscript('');
-      setFeedback('');
-// Replace "ai-coach-backend.onrender.com" with YOUR actual Render URL
-socket.current = new WebSocket('https://public-speaking-coach.onrender.com');
+      setFeedback([]);
+      setStatus('Connecting to the coach...');
+      
+      // === THIS LINE IS NOW CORRECTLY POINTING TO YOUR LIVE BACKEND ===
+      socket.current = new WebSocket('wss://public-speaking-coach.onrender.com'); 
+
       socket.current.onopen = () => {
         recognition.start();
         setIsListening(true);
@@ -60,7 +74,7 @@ socket.current = new WebSocket('https://public-speaking-coach.onrender.com');
       socket.current.onmessage = (event) => {
         const message = JSON.parse(event.data);
         if(message.type === 'feedback') {
-          setFeedback(prev => `${prev}\n\n${message.data}`);
+          setFeedback(prev => [...prev, message.data]);
           setIsLoadingFeedback(false);
         }
       };
@@ -70,44 +84,74 @@ socket.current = new WebSocket('https://public-speaking-coach.onrender.com');
           recognition.stop();
         }
       };
+
+      socket.current.onerror = () => {
+        setStatus('Could not connect to coach. Please refresh and try again.');
+        setIsListening(false);
+      }
     }
   };
 
+  if (appState === 'welcome') {
+    return (
+      <div className="app-wrapper">
+        <div className="app-container">
+          <div className="coach-card welcome-screen">
+            <h1>AI Presentation Coach</h1>
+            <p>Welcome! Get ready to improve your public speaking with instant, AI-powered feedback. When you're ready, press the button below to begin.</p>
+            <button onClick={startCoaching}>
+              <FiPlay />
+              Get Started
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="container my-5">
-      <div className="card text-center p-4">
-        
-        <header className="mb-4">
-          <h1 className="display-5">AI Presentation Coach</h1>
-          <p className="lead text-muted">Your personal assistant for powerful public speaking.</p>
-        </header>
+    <div className="app-wrapper">
+      <div className="app-container">
+        <div className={`coach-card ${isListening ? 'listening-active' : ''}`}>
+          <header className="header">
+            <h1>Live Coaching Session</h1>
+          </header>
 
-        <div className="d-flex justify-content-center align-items-center mb-3">
-          <button onClick={toggleListen} className={`btn ${isListening ? 'btn-danger' : 'btn-primary'} btn-lg px-5`}>
-            {isListening ? 'Stop Session' : 'Start Session'}
-          </button>
-        </div>
-        
-        <p className={`status-text mb-4 ${isListening ? 'listening' : ''}`}>{status}</p>
+          <div className="controls">
+            <button onClick={toggleListen} className={isListening ? 'stop-button' : ''}>
+              {isListening ? <FiStopCircle /> : <FiMic />}
+              {isListening ? 'Stop Session' : 'Start Session'}
+            </button>
+          </div>
 
-        <div className="row text-start">
-          <div className="col-md-6 mb-4 mb-md-0">
-            <h4 className="mb-3">Your Transcript</h4>
-            <div className="analysis-box">
-              {transcript || "Your spoken text will appear here..."}
+          <div className="status-indicator">
+            {isListening && !isLoadingFeedback && <FiMic />}
+            {isLoadingFeedback && <FiLoader className="spinner" />}
+            <span style={{ marginLeft: '0.5rem' }}>{status}</span>
+          </div>
+
+          <div className="results-grid">
+            <div className="transcript-section">
+              <h4><FiFileText /> Your Transcript</h4>
+              <div className="transcript-box">
+                {transcript || "Your spoken text will appear here..."}
+              </div>
+            </div>
+            <div className="feedback-section">
+              <h4><FiMessageSquare /> AI Coach Feedback</h4>
+              <div className="feedback-stream">
+                {feedback.length === 0 && !isLoadingFeedback && <p>Feedback will appear here as you speak.</p>}
+                {feedback.map((item, index) => (
+                  <div key={index} className="feedback-bubble">
+                    <div className="feedback-avatar"><FiCpu /></div>
+                    <div className="feedback-content"><pre>{item}</pre></div>
+                  </div>
+                ))}
+                <div ref={feedbackEndRef} />
+              </div>
             </div>
           </div>
-          <div className="col-md-6">
-            <h4 className="mb-3 d-flex align-items-center">
-              AI Coach Feedback
-              {isLoadingFeedback && <div className="spinner-border text-primary ms-3" role="status"></div>}
-            </h4>
-            <div className="analysis-box">
-              <pre>{feedback || "Live feedback from the AI will appear here..."}</pre>
-            </div>
-          </div>
         </div>
-
       </div>
     </div>
   );
